@@ -18,7 +18,7 @@ from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
-app = Flask(__name__, template_folder=tmpl_dir)
+app = Flask(__name__, page_folder=tmpl_dir)
 
 
 #
@@ -160,9 +160,29 @@ def index():
 # Notice that the function name is another() rather than index()
 # The functions for each app.route need to have different names
 #
-@app.route('/another')
-def another():
-  return render_template("another.html")
+@app.route('/manager')
+def manager():
+  return render_template("manager.html")
+
+@app.route('/artist')
+def artist():
+  return render_template("artist.html")
+
+@app.route('/setlist')
+def setlist():
+  return render_template("setlist.html")
+
+@app.route('/song')
+def song():
+  return render_template("song.html")    
+
+@app.route('/venue')
+def venue():
+  return render_template("venue.html")  
+
+@app.route('/seat')
+def seat():
+  return render_template("seat.html")
 
 
 # Example of adding new data to the database
