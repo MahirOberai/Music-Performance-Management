@@ -18,7 +18,7 @@ from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
-app = Flask(__name__, page_folder=tmpl_dir)
+app = Flask(__name__, template_folder=tmpl_dir)
 
 
 #
@@ -31,7 +31,13 @@ app = Flask(__name__, page_folder=tmpl_dir)
 # For example, if you had username gravano and password foobar, then the following line would be:
 #
 #     DATABASEURI = "postgresql://gravano:foobar@35.243.220.243/proj1part2"
-#
+
+"""
+I have commented out the database connection part so that I can work on the html pages in the mean time - Mahir
+
+
+Database connect part starts here
+
 DATABASEURI = "postgresql://user:password@35.243.220.243/proj1part2"
 
 
@@ -43,23 +49,26 @@ engine = create_engine(DATABASEURI)
 #
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
-#
-engine.execute("""CREATE TABLE IF NOT EXISTS test (
+
+#add back the quotes 
+
+engine.execute(CREATE TABLE IF NOT EXISTS test (
   id serial,
   name text
-);""")
-engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
+);)
+engine.execute(INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');)
 
 
 @app.before_request
 def before_request():
-  """
+  #add back the quotes
+  
   This function is run at the beginning of every web request 
   (every time you enter an address in the web browser).
   We use it to setup a database connection that can be used throughout the request.
 
   The variable g is globally accessible.
-  """
+  
   try:
     g.conn = engine.connect()
   except:
@@ -69,15 +78,19 @@ def before_request():
 
 @app.teardown_request
 def teardown_request(exception):
-  """
+  #add back the quotes
+  
   At the end of the web request, this makes sure to close the database connection.
   If you don't, the database could run out of memory!
-  """
+  
   try:
     g.conn.close()
   except Exception as e:
     pass
 
+
+Database connect part ends here
+"""
 
 #
 # @app.route is a decorator around index() that means:
@@ -111,11 +124,20 @@ def index():
   #
   # example of a database query
   #
+  #uncomment this below
+  """
   cursor = g.conn.execute("SELECT name FROM test")
   names = []
   for result in cursor:
     names.append(result['name'])  # can also be accessed using result[0]
   cursor.close()
+
+  cursor = g.conn.execute("SELECT * FROM Artists JOIN")
+  artists_info = []
+  for result in cursor:
+    artists_info.append(result[0])
+  cursor.close()
+  """
 
   #
   # Flask uses Jinja templates, which is an extension to HTML where you can
@@ -143,14 +165,16 @@ def index():
   #     <div>{{n}}</div>
   #     {% endfor %}
   #
-  context = dict(data = names)
+
+  #uncomment this below
+  #context = dict(data = names)
 
 
   #
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
-  return render_template("index.html", **context)
+  return render_template("index.html") #, **context) 
 
 #
 # This is an example of a different path.  You can see it at:
@@ -183,6 +207,10 @@ def venue():
 @app.route('/seat')
 def seat():
   return render_template("seat.html")
+
+@app.route('/ticket_holder')
+def ticket_holder():
+  return render_template("ticket_holder.html") 
 
 
 # Example of adding new data to the database
