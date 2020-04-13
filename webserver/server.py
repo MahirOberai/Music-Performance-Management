@@ -132,11 +132,31 @@ def index():
     names.append(result['name'])  # can also be accessed using result[0]
   cursor.close()
 
-  cursor = g.conn.execute("SELECT * FROM Artists JOIN")
-  artists_info = []
+
+
+
+  Part 1 Queries that we outlines:
+  1. Query that returns venues along with their artists, setlists, and seat occupancy
+  2. Query that returns total duration of setlists in a venue
+    To do this, need to sum up song durations of each setlist and then sum up setlist durations
+  
+  3. Query that returns all artists with a specific genre #maybe make a new genre page
+
+  2.
+
+  cursor = g.conn.execute("
+  SELECT V.Name, a.Name, sl.Name, count(s.Seat_ID)  FROM Venues v
+  JOIN Artists a on a.Venue_ID = v.Venue_ID
+  JOIN Setlists sl ON sl.Venue_ID = v.Venue_ID
+  JOIN Seats s ON s.Venue_ID = v.Venue_ID
+  GROUP BY v.Name
+  ")
+  venues_info = []
   for result in cursor:
-    artists_info.append(result[0])
+    venues_info.append(result[0])
   cursor.close()
+
+
   """
 
   #
@@ -186,31 +206,110 @@ def index():
 #
 @app.route('/manager')
 def manager():
-  return render_template("manager.html")
+  """
+  cursor = g.conn.execute("SELECT Managers.Name FROM Managers")
+  managers = []
+  for result in cursor:
+    names.append(result[0])  # can also be accessed using result[0]
+  cursor.close()
+
+  context = dict(data = managers)
+
+  """
+
+
+
+  return render_template("manager.html") #, **context)
 
 @app.route('/artist')
 def artist():
-  return render_template("artist.html")
+  """
+  #Query that matches the one from part 2
+
+  cursor = g.conn.execute("SELECT * FROM Artists JOIN")
+  artists_info = []
+  for result in cursor:
+    artists_info.append(result[0])
+  cursor.close()
+
+  context = dict(data = artists_info)
+
+  """
+
+  return render_template("artist.html") #, **context)
 
 @app.route('/setlist')
 def setlist():
-  return render_template("setlist.html")
+  """
+  cursor = g.conn.execute("SELECT Setlists.Name FROM Setlists")
+  setlists = []
+  for result in cursor:
+    names.append(result[0])  # can also be accessed using result[0]
+  cursor.close()
+
+  context = dict(data = setlists)
+
+  """
+  return render_template("setlist.html") #, **context)
 
 @app.route('/song')
 def song():
-  return render_template("song.html")    
+  return render_template("song.html") #, **context)    
 
 @app.route('/venue')
 def venue():
-  return render_template("venue.html")  
+  
+  """
+  1.
+  This was according to what was written in our iniital part 1 write up
+  I wasn't sure how the database relationships were set up so this may not be possibe
+
+
+  cursor = g.conn.execute("
+  SELECT V.Name, a.Name, sl.Name, count(s.Seat_ID)  FROM Venues v
+  JOIN Artists a on a.Venue_ID = v.Venue_ID
+  JOIN Setlists sl ON sl.Venue_ID = v.Venue_ID
+  JOIN Seats s ON s.Venue_ID = v.Venue_ID
+  GROUP BY v.Name
+  ")
+  venues_info = []
+  for result in cursor:
+    venues_info.append(result[0])
+  cursor.close()  
+  
+  context = dict(data = venues_info)
+  """
+
+
+  return render_template("venue.html") #, **context)
 
 @app.route('/seat')
 def seat():
-  return render_template("seat.html")
+  """
+  cursor = g.conn.execute("SELECT * FROM Seats")
+  seats_info = []
+  for result in cursor:
+    names.append(result[0])  # can also be accessed using result[0]
+  cursor.close()
+
+  context = dict(data = seats_info)
+
+  """
+  return render_template("seat.html") #, **context)
 
 @app.route('/ticket_holder')
 def ticket_holder():
-  return render_template("ticket_holder.html") 
+  """
+  cursor = g.conn.execute("SELECT Ticket_Holders.Name FROM Ticket_Holders") #not sure how ticket holders table was named
+  ticket_holders = []
+  for result in cursor:
+    names.append(result[0])  # can also be accessed using result[0]
+  cursor.close()
+
+  context = dict(data = ticket_holders)
+
+  """
+  return render_template("ticket_holder.html") #, **context) 
 
 
 # Example of adding new data to the database
