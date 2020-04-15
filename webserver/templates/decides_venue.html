@@ -1,0 +1,24 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+<body>
+  <h1>decides_venue</h1>
+  <div>manager_id, venue_id</div>
+  <div>
+    {% for n in data %}
+    <div>{{n}}</div>
+    {% endfor %}
+  </div>
+</body>
+
+<form method="POST" action="/add">
+    <p>Insert new manager_id: <input type="text" name="manager_id"> <input type="submit" value="Add"></p>
+    <p>Insert new venue_id: <input type="text" name="venue_id"> <input type="submit" value="Add"></p>
+</form>
+
+</html>  
