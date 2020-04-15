@@ -296,40 +296,38 @@ def ticket_holder():
 
   return render_template("ticket_holder.html", **context) 
 
-  @app.route('/contains_song')
-  def contains_song():
+@app.route('/contains_song')
+def contains_song():
   
-    cursor = g.conn.execute("SELECT * FROM contains_song;")
-    contains_song = []
-    for result in cursor:
-      contains_song.append([result['setlist_id'], result['song_id']])
-    cursor.close()
+  cursor = g.conn.execute("SELECT * FROM contains_song;")
+  contains_song = []
+  for result in cursor:
+    contains_song.append([result['setlist_id'], result['song_id']])
+  cursor.close()
 
-    context = dict(data = contains_song)
+  context = dict(data = contains_song)
 
   return render_template("contains_song.html", **context) 
 
-  @app.route('/decides_venue')
-  def decides_venue():
+@app.route('/decides_venue')
+def decides_venue():
   
-    cursor = g.conn.execute("SELECT * FROM decides_venue;")
-    decides_venue = []
-    for result in cursor:
-      decides_venue.append([result['manager_id'], result['venue_id']])
-    cursor.close()
+  cursor = g.conn.execute("SELECT * FROM decides_venue;")
+  decides_venue = []
+  for result in cursor:
+    decides_venue.append([result['manager_id'], result['venue_id']])
+  cursor.close()
 
-    context = dict(data = decides_venue)
+  context = dict(data = decides_venue)
 
   return render_template("decides_venue.html", **context) 
 
-
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
-def add_to_decides_venue():
+def add():
   manager_id = request.form['manager_id']
   venue_id = request.form['venue_id']
-  g.conn.execute('INSERT INTO decides_venue(manager_id) VALUES (%s)', manager_id)
-  g.conn.execute('INSERT INTO decides_venue(vennue_id) VALUES (%s)', venue_id)
+  g.conn.execute('INSERT INTO decides_venue(manager_id, venue_id) VALUES (%s, %s)', manager_id, venue_id)
   return redirect('/')
 
 
