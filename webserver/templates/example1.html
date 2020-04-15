@@ -1,0 +1,31 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+<body>
+  <h1>Query Example 1</h1>
+  <p>This query example displays the occupancies of the venues and runs the follow query:</p>
+  <p>
+    SELECT v.name as venue_name, count(s.seat_id) as occupancy
+    FROM seat s
+    JOIN venue v ON v.venue_id = s.venue_id
+    GROUP BY v.name
+    ;
+  </p>
+  Output:
+  <div>venue_name, occupancy /100 total occupancy</div>
+  <div>
+    {% for n in data %}
+    <div>{{n}}</div>
+    {% endfor %}
+  </div>
+
+  <p><a href="/">Go to back to index</a></p> 
+  
+</body>
+
+</html>  

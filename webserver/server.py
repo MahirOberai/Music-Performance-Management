@@ -187,7 +187,7 @@ def index():
 @app.route('/manager')
 def manager():
   
-  cursor = g.conn.execute("SELECT * FROM manager;")
+  cursor = g.conn.execute("SELECT * FROM manager ORDER BY manager_id;")
   manager = []
   for result in cursor:
     manager.append([result['manager_id'], result['name']])
@@ -200,7 +200,7 @@ def manager():
 @app.route('/artist')
 def artist():
 
-  cursor = g.conn.execute("SELECT * FROM artist;")
+  cursor = g.conn.execute("SELECT * FROM artist ORDER BY artist_id;")
   artist = []
   for result in cursor:
     artist.append([result['artist_id'], result['manager_id'], result['name'], result['genre']])
@@ -213,7 +213,7 @@ def artist():
 @app.route('/setlist')
 def setlist():
   
-  cursor = g.conn.execute("SELECT * FROM setlist;")
+  cursor = g.conn.execute("SELECT * FROM setlist ORDER BY setlist_id;")
   setlist = []
   for result in cursor:
     setlist.append([result['setlist_id'], result['artist_id'], result['song_id'], result['number_of_songs'], result['duration']])
@@ -225,7 +225,7 @@ def setlist():
 
 @app.route('/song')
 def song():
-  cursor = g.conn.execute("SELECT * FROM song;")
+  cursor = g.conn.execute("SELECT * FROM song ORDER BY song_id;")
   song = []
   for result in cursor:
     song.append([result['song_id'], result['title'], result['duration']])
@@ -238,7 +238,7 @@ def song():
 @app.route('/venue')
 def venue():
 
-  cursor = g.conn.execute("SELECT * FROM venue;")
+  cursor = g.conn.execute("SELECT * FROM venue ORDER BY venue_id;")
   venue = []
   for result in cursor:
     venue.append([result['venue_id'], result['name'], result['location']])
@@ -247,33 +247,11 @@ def venue():
   context = dict(data = venue)
 
   return render_template("venue.html", **context)
-  
-  
-  #1.
-  #This was according to what was written in our iniital part 1 write up
-  #I wasn't sure how the database relationships were set up so this may not be possibe
-
-  """
-  cursor = g.conn.execute(
-  SELECT v.name, a.name, sl.name, count(s.seat_id)  
-  FROM venue v
-  JOIN artist a on a.venue_id = v.venue_id
-  JOIN setlist sl ON sl.venue_id = v.Venue_id
-  JOIN seat s ON s.venue_id = v.venue_id
-  GROUP BY v.name
-  )
-  venue_info = []
-  for result in cursor:
-    venue_info.append(result[0])
-  cursor.close()
-  
-  return render_template("venue.html") #, **context)
-  """
 
 @app.route('/seat')
 def seat():
   
-  cursor = g.conn.execute("SELECT * FROM seat;")
+  cursor = g.conn.execute("SELECT * FROM seat ORDER BY seat_id;")
   seat = []
   for result in cursor:
     seat.append([result['seat_id'], result['venue_id']])
@@ -286,7 +264,7 @@ def seat():
 @app.route('/ticket_holder')
 def ticket_holder():
   
-  cursor = g.conn.execute("SELECT * FROM ticket_holder;")
+  cursor = g.conn.execute("SELECT * FROM ticket_holder ORDER BY holder_id;")
   ticket_holder = []
   for result in cursor:
     ticket_holder.append([result['holder_id'], result['venue_id'], result['seat_id'], result['name'], result['email']])
@@ -299,7 +277,7 @@ def ticket_holder():
 @app.route('/contains_song')
 def contains_song():
   
-  cursor = g.conn.execute("SELECT * FROM contains_song;")
+  cursor = g.conn.execute("SELECT * FROM contains_song ORDER BY setlist_id;")
   contains_song = []
   for result in cursor:
     contains_song.append([result['setlist_id'], result['song_id']])
@@ -307,12 +285,12 @@ def contains_song():
 
   context = dict(data = contains_song)
 
-  return render_template("contains_song.html", **context) 
+  return render_template("contains_song.html", **context)  
 
 @app.route('/decides_venue')
 def decides_venue():
   
-  cursor = g.conn.execute("SELECT * FROM decides_venue;")
+  cursor = g.conn.execute("SELECT * FROM decides_venue ORDER BY manager_id;")
   decides_venue = []
   for result in cursor:
     decides_venue.append([result['manager_id'], result['venue_id']])
@@ -322,14 +300,113 @@ def decides_venue():
 
   return render_template("decides_venue.html", **context) 
 
-# Example of adding new data to the database
+@app.route('/example1')
+def example1():
+  
+  #This query displays the occupancies of the venues
+
+  cursor = g.conn.execute("""
+  SELECT v.name as venue_name, count(s.seat_id) as occupancy
+  FROM seat s
+  JOIN venue v ON v.venue_id = s.venue_id
+  GROUP BY v.name
+  ;""")
+  venue_occupancy = []
+  for result in cursor:
+    venue_occupancy.append([result['venue_name'], result['occupancy']])
+  cursor.close()
+
+  context = dict(data = venue_occupancy)
+  
+  return render_template("example1.html", **context)
+
+@app.route('/example2')
+def example2():
+  
+  #This query displays the artists and sorts by genre
+
+  cursor = g.conn.execute("""
+  SELECT a.name as artist_name, a.genre as artist_genre, a.venue_id as venue_id
+  FROM artist a
+  ORDER BY artist_genre
+  ;""")
+  artists_by_genre = []
+  for result in cursor:
+    artists_by_genre.append([result['artist_name'], result['artist_genre'], result['venue_id']])
+  cursor.close()
+
+  context = dict(data = artists_by_genre)
+  
+  return render_template("example2.html", **context)
+
+@app.route('/example3')
+def example3():
+
+  #This query displays the venues along with their artists, genres, setlist durations
+
+  cursor = g.conn.execute("""
+  SELECT v.name as venue_name, a.name as artist_name, a.genre as artist_genre, sl.duration as setlist_duration
+  FROM venue v
+  JOIN artist a on a.venue_id = v.venue_id
+  JOIN setlist sl on sl.artist_id = a.artist_id
+  GROUP BY venue_name, artist_name, artist_genre, setlist_duration
+  ORDER BY venue_name
+  ;""")
+  venue_artists = []
+  for result in cursor:
+    venue_artists.append([result['venue_name'], result['artist_name'], result['artist_genre'], result['setlist_duration']])
+  cursor.close()
+
+  context = dict(data = venue_artists)
+  
+  return render_template("example3.html", **context)
+
+@app.route('/example4')
+def example4():
+
+  #This query displays the venues along with their artists, genres, setlist durations
+
+  cursor = g.conn.execute("""
+  SELECT v.name as venue_name, sum(sl.duration) as total_duration
+  FROM venue v
+  JOIN artist a on a.venue_id = v.venue_id
+  JOIN setlist sl on sl.artist_id = a.artist_id
+  GROUP BY venue_name
+  ORDER BY venue_name
+  ;""")
+  venue_durations = []
+  for result in cursor:
+    venue_durations.append([result['venue_name'], result['total_duration']])
+  cursor.close()
+
+  context = dict(data = venue_durations)
+  
+  return render_template("example4.html", **context)
+
+
+#This method allows user to add rows to the decides_manager table
 @app.route('/add', methods=['POST'])
 def add():
   manager_id = request.form['manager_id']
   venue_id = request.form['venue_id']
   g.conn.execute('INSERT INTO decides_venue(manager_id, venue_id) VALUES (%s, %s)', manager_id, venue_id)
-  return redirect('/')
+  return redirect('/decides_venue')
 
+#This method allows user to update the email field given the holder name of the ticket_holder table
+@app.route('/update', methods=['POST'])
+def update():
+  email = request.form['email']
+  name = request.form['name']
+  g.conn.execute('UPDATE ticket_holder SET email = (%s) WHERE name = (%s)', email, name)
+  return redirect('/ticket_holder')  
+
+#This method allows user to update the email field given the holder name of the ticket_holder table
+@app.route('/update_artist_venue', methods=['POST'])
+def update_artist_venue():
+  venue_id = request.form['venue_id']
+  artist_name = request.form['artist_name']
+  g.conn.execute('UPDATE artist SET venue_id = (%s) WHERE name = (%s)', venue_id, artist_name)
+  return redirect('/example2')   
 
 @app.route('/login')
 def login():

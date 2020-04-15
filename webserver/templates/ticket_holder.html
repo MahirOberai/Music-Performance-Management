@@ -10,10 +10,22 @@
     <h1>ticket_holder</h1>
     <div>holder_id, venue_id, seat_id, name, email</div>
     <div>
-        {% for n in data %}
+      {% for n in data %}
         <div>{{n}}</div>
-        {% endfor %}
-      </div>
+      {% endfor %}
+    </div>
+
+    <form method="POST" action="/update">
+      <p>Update email, enter name and new email: 
+        <input type="text" name="name"> 
+        <input type="text" name="email"> 
+        <input type="submit" value="Add">
+      </p>
+    </form>
+
+    <p><a href="/">Go to back to index</a></p> 
+   
 </body>
+
 
 </html>  

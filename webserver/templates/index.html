@@ -9,30 +9,39 @@
 
 <body>
   <h1>Welcome to our music manager database platform!</h1>
-  <div>This database application allows managers to view all of their respective artists 
+  <h2>Mahir Oberai mo2654</h2>
+  <h2>Greg Sansolo gds2127</h2>
+  <p>
+    This database application allows managers to view all of their respective artists 
     and perform queries to display information about artists' setlists and songs.
-  The application also enables managers to perform queries to reveal how the artists,
-setlists, and songs are organized into certain venues for shows, as well as how the venue 
-seat occupancies interact with their respective ticket holders.</div>
+    The application also enables managers to perform queries to reveal how the artists,
+    setlists, and songs are organized into certain venues for shows, as well as how the venue 
+    seat occupancies interact with their respective ticket holders.
+  </p>
 
-<div>
-  {% for n in data %}
-  <div>{{n}}</div>
-  {% endfor %}
-</div>
+  <div>
+    {% for n in data %}
+    <div>{{n}}</div>
+    {% endfor %}
+  </div>
 
-<p>These are all the entity tables in our database</p>  
-<p><a href="manager">Go to the manager table</a></p>
-<p><a href="artist">Go to the artist table</a></p>
-<p><a href="setlist">Go to the setlist table</a></p>
-<p><a href="song">Go to the song table</a></p>
-<p><a href="venue">Go to the venue table</a></p>
-<p><a href="seat">Go to the seat table</a></p>
-<p><a href="ticket_holder">Go to the ticket_holder table</a></p>
-<p><a href="contains_song">Go to the contains_song table</a></p>
-<p><a href="decides_venue">Go to the decides_venue table and add data</a></p>
+  <p>Click to display the entity and relation tables in our database</p>  
+  <p><a href="manager">Go to the manager table</a></p>
+  <p><a href="artist">Go to the artist table</a></p>
+  <p><a href="setlist">Go to the setlist table</a></p>
+  <p><a href="song">Go to the song table</a></p>
+  <p><a href="venue">Go to the venue table</a></p>
+  <p><a href="seat">Go to the seat table</a></p>
+  <p><a href="ticket_holder">Go to the ticket_holder table</a></p>
+  <p><a href="contains_song">Go to the contains_song table</a></p>
+  <p><a href="decides_venue">Go to the decides_venue table and add data</a></p>
+
+  <p>Click to try our example queries</p> 
+  <p><a href="example1">Go to query example 1</a></p>
+  <p><a href="example2">Go to query example 2</a></p>
+  <p><a href="example3">Go to query example 3</a></p>
+  <p><a href="example4">Go to query example 4</a></p>
 
 </body>
-
 
 </html>

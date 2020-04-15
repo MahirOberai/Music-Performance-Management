@@ -1,0 +1,41 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+<body>
+  <h1>Query Example 4</h1>
+  <p>
+    This query example displays the venues along with their total durations
+  </p>
+
+  <p>
+    The example runs the following query:
+  </p>
+  <p>
+    SELECT v.name as venue_name, sum(sl.duration) as total_duration
+    FROM venue v
+    JOIN artist a on a.venue_id = v.venue_id
+    JOIN setlist sl on sl.artist_id = a.artist_id
+    GROUP BY venue_name
+    ORDER BY venue_name
+    ;
+  </p>
+
+  Output:
+  <div>venue_name, total_duration</div>
+  <div>
+    {% for n in data %}
+    <div>{{n}}</div>
+    {% endfor %}
+  </div>
+
+  <p><a href="example2">Go back to query example 2 to update artists within venues</a></p>
+  <p><a href="/">Go to back to index</a></p> 
+  
+</body>
+
+</html>  
