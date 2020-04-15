@@ -41,18 +41,6 @@ DATABASEURI = "postgresql://gds2127:6010@35.231.103.173/proj1part2"
 #
 engine = create_engine(DATABASEURI)
 
-#
-# Example of running queries in your database
-# Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
-
-#add back the quotes 
-
-engine.execute("""CREATE TABLE IF NOT EXISTS test(
-  id serial,
-  name text
-);""")
-engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
-
 
 @app.before_request
 def before_request():
@@ -110,35 +98,6 @@ def index():
 
   # DEBUG: this is debugging code to see what request looks like
   print(request.args)
-
-
-  #
-  # example of a database query
-  #
-
-  """
-  cursor = g.conn.execute("SELECT name FROM test")
-  names = []
-  for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
-  cursor.close()
-
-
-
-  
-  Part 1 Queries that we outlines:
-  1. Query that returns venues along with their artists, setlists, and seat occupancy
-  2. Query that returns total duration of setlists in a venue
-    To do this, need to sum up song durations of each setlist and then sum up setlist durations
-  
-  3. Query that returns all artists with a specific genre #maybe make a new genre page
-  """
-
-  #2.
-  
-
-
-  
 
   #
   # Flask uses Jinja templates, which is an extension to HTML where you can
